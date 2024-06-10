@@ -189,19 +189,19 @@ class DataPipelineTest(unittest.TestCase):
     def test_sql_queries(self):
         try:
             # Run SQL queries
-            profit_by_year = self.spark.sql("SELECT Year, SUM(TotalProfit) AS Profit FROM profit_aggregate GROUP BY Year")
+            profit_by_year = self.spark.sql("SELECT Year, SUM(TotalProfit) AS Profit FROM profit_aggregate GROUP BY Year order by Profit desc")
             print("Profit by Year:")
             profit_by_year.show()
 
-            profit_by_year_and_category = self.spark.sql("SELECT Year, Category, SUM(TotalProfit) AS Profit FROM profit_aggregate GROUP BY Year, Category")
+            profit_by_year_and_category = self.spark.sql("SELECT Year, Category, SUM(TotalProfit) AS Profit FROM profit_aggregate GROUP BY Year, Category order by Profit desc")
             print("Profit by Year and Category:")
             profit_by_year_and_category.show()
 
-            profit_by_customer = self.spark.sql("SELECT CustomerName, SUM(TotalProfit) AS Profit FROM profit_aggregate GROUP BY CustomerName")
+            profit_by_customer = self.spark.sql("SELECT CustomerName, SUM(TotalProfit) AS Profit FROM profit_aggregate GROUP BY CustomerName order by Profit desc")
             print("Profit by Customer:")
             profit_by_customer.show()
 
-            profit_by_customer_and_year = self.spark.sql("SELECT CustomerName, Year, SUM(TotalProfit) AS Profit FROM profit_aggregate GROUP BY CustomerName, Year")
+            profit_by_customer_and_year = self.spark.sql("SELECT CustomerName, Year, SUM(TotalProfit) AS Profit FROM profit_aggregate GROUP BY CustomerName, Year order by Profit desc")
             print("Profit by Customer and Year:")
             profit_by_customer_and_year.show()
 
@@ -224,11 +224,16 @@ suite.addTest(DataPipelineTest('test_aggregate_table_creation'))
 suite.addTest(DataPipelineTest('test_sql_queries'))
 
 # Run the tests
-runner = unittest.TextTestRunner()
-runner.run(suite)
+try:
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if result.wasSuccessful():
+        print("All tests passed successfully.")
+    else:
+        print("Some tests failed.")
+except Exception as e:
+    print(f"An error occurred while running the tests: {e}")
 
 
 
 # COMMAND ----------
-
-
